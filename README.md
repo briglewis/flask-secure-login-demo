@@ -1,9 +1,9 @@
 
-# 🔐 Flask Secure Login Application
+# 🔐 Flask (Kind Of) Secure Login Application
 
-A security-focused Flask authentication application demonstrating defensive controls aligned with modern web security best practices and OWASP guidance.
+A security-focused Flask authentication application demonstrating a selection of defensive controls aligned with modern web security best practices and OWASP guidance.
 
-This project implements secure authentication, session management, brute-force protection, CSRF protection, and HTTP security hardening.
+This project implements secure authentication, session management, brute-force protection, CSRF protection, and HTTP security hardening. It is no means exhaustive and was built within strict time contraints.
 
 ---
 
