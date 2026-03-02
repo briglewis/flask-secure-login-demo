@@ -1,283 +1,292 @@
-submission.md 1
+# 🔐 Submission
 
-# Submission
+## 📌 Overview
 
-I chose Flask as I've built a small app in Flask before and Python is the quickest language for me to build in.
+I chose Flask for this project because I have prior experience building small applications with it, and Python allows me to rapidly prototype secure functionality.
 
-My first step was to created a list of web app vulns, particularly around login forms. 
+My initial step was to identify common web application vulnerabilities — particularly those affecting authentication and login workflows. I then prioritised controls that could be realistically implemented, tested, and validated within the time available.
 
-I then chose the ones I thought I could create defenses against in the small time I had to build, test and ship it to you.
+This submission focuses on practical, defensive security controls aligned with modern web security best practices and OWASP guidance.
 
+---
 
-## Defensive Measures Implemented
+# 🛡 Defensive Measures Implemented
 
-- CSRF token to prevent Cross-Site Request Forgery attacks.
-- Username max length validation to prevent DoS attacks
-- Password mininum and maximum chars validation to prevent brute force and DoS attacks
-- Password hashing to avoid storing password in plaintext 
-- Generic error messages on failed login to prevent username enumeration
-- Authentication on all pages to prevent forced browsing
-- Parameterised queries for SQL callsby default using SQLAlchemy
-- Basic HTTP security headers to prevent XSS and clickjacking
-- Cookies with cookie flags set to prevent CSRF and XSS
-- Input validation on the client side and server side to prevent SQLi and XSS attacks.
-- Rate-limiting by IP and username to prevent brute force attacks 
+* CSRF protection to prevent Cross-Site Request Forgery
+* Username length validation to reduce DoS risk
+* Password minimum and maximum length validation
+* Secure password hashing (no plaintext storage)
+* Generic authentication error messages to prevent username enumeration
+* Authentication enforcement on protected routes
+* Parameterised queries via SQLAlchemy ORM
+* HTTP security headers (CSP, clickjacking protection)
+* Secure session cookie configuration
+* Client-side and server-side input validation
+* Rate limiting and account lockout to mitigate brute force attacks
 
+---
 
-## Tech used
+# 🧰 Technologies Used
 
-- Password hashing (Werkzeug)
-- CSRF protection (Flask-WTF)
-- Rate limiting (Flask-Limiter)
-- Account lockout after failed logins
-- Open redirect prevention for `next` parameter
-- Secure session cookie settings
-- Security headers (Flask-Talisman)
-- POST-only logout with CSRF
+* Flask
+* Flask-Login (authentication/session management)
+* Flask-WTF (CSRF + form validation)
+* Flask-Limiter (rate limiting)
+* Flask-Talisman (security headers)
+* SQLAlchemy (ORM / SQL injection prevention)
+* Werkzeug (password hashing utilities)
 
-## Recommendations for future hardening 
+---
 
-- Session expiration
-- TLS so HTTPS in prod
-- Logging and monitoring
-- Log rate limiting
-- MFA 
-- Captcha
-- Password checks against known weak passwords when they are being set / reset.
-- Password reset
-- HSTS header and Secure Cookie flag when served over HTTPS
-- WAF
+# 🚀 How I Implemented the Security Controls
 
-## AI services and models used
+---
 
-I have a chatbot I created a few years ago for my pen testing work called Hacky McHack Face. It uses Open AIs 5.2 model. I used this to troubleshoot my code and sanity check the choices I made re my security controls. I also used it to create parts of my README.md and this file, SUBMISSION.md 
+## 1️⃣ CSRF Protection (Flask-WTF)
 
-I wrote my code in Visual Studio and had Co-Pilot version
-0.37.9 enabled.
-
-When ChatGPT got laggy I switched to a free version of Claude using Sonnet 4.6.
-
-
-## How I implemented my security controls
-
-1. CSRF Protection (Flask-WTF)
-
-Mitigates:
-
+**Mitigates:**
 Cross-Site Request Forgery (CSRF)
 
-Implementation:
+**Implementation:**
 
-All forms use FlaskForm
+* All forms inherit from `FlaskForm`
+* `{{ form.hidden_tag() }}` injects a CSRF token
+* Logout is POST-only and CSRF-protected
 
-{{ form.hidden_tag() }} includes CSRF token
+**How to Test:**
 
-Logout is POST-only and CSRF-protected
+* Remove CSRF token via DevTools → request fails
+* Attempt cross-site POST → request rejected
 
-How to Test:
+---
 
-Remove the CSRF token from a form submission using DevTools → request should fail.
+## 2️⃣ Input Validation (Length + Format Controls)
 
-Attempt cross-site POST → request should be rejected.
+**Mitigates:**
 
-2. Input Validation (Length + Format Controls)
+* Denial of Service via oversized payloads
+* Injection attempts
+* Malformed input
 
-Mitigates:
+**Implementation:**
 
-Denial of Service (DoS) via oversized payloads
+* Username maximum length enforced
+* Password minimum and maximum length enforced
+* Email format validation enabled
+* Server-side validation via WTForms (client-side validation is never trusted)
 
-Injection attempts
+**How to Test:**
 
-Malformed input
+* Submit overly long usernames/passwords
+* Submit invalid email formats
 
-Implementation:
+---
 
-Username maximum length enforced
+## 3️⃣ Password Hashing
 
-Password minimum and maximum length enforced
+**Mitigates:**
+Credential disclosure in the event of database compromise
 
-Email validation enabled
+**Implementation:**
 
-Server-side validation via WTForms (never trust client-side validation)
+* Passwords hashed using `generate_password_hash`
+* Verified using `check_password_hash`
+* No plaintext passwords stored
 
-How to Test:
+**How to Test:**
 
-Attempt to submit overly long usernames/passwords.
+* Inspect database → password column contains hashes, not plaintext
 
-Attempt invalid email formats.
+---
 
-3. Password Hashing
+## 4️⃣ Generic Authentication Errors
 
-Mitigates:
-
-Credential disclosure if database is compromised
-
-Implementation:
-
-Passwords hashed using Werkzeug generate_password_hash
-
-Verified using check_password_hash
-
-No plaintext passwords stored
-
-How to Test:
-
-Inspect database — password column contains hash, not plaintext.
-
-4. Generic Authentication Errors
-
-Mitigates:
-
+**Mitigates:**
 Username enumeration
 
-Implementation:
+**Implementation:**
 
-Login failure message is always:
+* Login failure message is always:
 
-"Your email or password is incorrect."
+  > "Your email or password is incorrect."
 
-No distinction between unknown user and bad password
+* No distinction between unknown user and incorrect password
 
-How to Test:
+**How to Test:**
 
-Attempt login with:
+* Valid email + wrong password
+* Invalid email
+  → Same error message returned
 
-Valid email + wrong password
+---
 
-Invalid email
-→ Same error message should be shown.
+## 5️⃣ Authentication Required on Protected Routes
 
-5. Authentication Required on Protected Routes
+**Mitigates:**
+Forced browsing / unauthorised access
 
-Mitigates:
+**Implementation:**
 
-Forced browsing / unauthorized access
+* `@login_required` applied to protected routes
+* `login.login_view` configured
 
-Implementation:
+**How to Test:**
 
-@login_required applied to protected routes
+* Attempt direct access to `/dashboard` while not authenticated
+* Should redirect to login page with `?next=` parameter
 
-login.login_view configured
+---
 
-How to Test:
+## 6️⃣ Parameterised Queries (SQLAlchemy ORM)
 
-Attempt direct access to /dashboard while not logged in.
-
-Should redirect to login page with ?next= parameter.
-
-6. Parameterized Queries (SQLAlchemy ORM)
-
-Mitigates:
-
+**Mitigates:**
 SQL Injection (SQLi)
 
-Implementation:
+**Implementation:**
 
-All DB calls use SQLAlchemy ORM:
+* All database queries use SQLAlchemy ORM:
 
+```python
 sa.select(User).where(User.email == form.email.data.lower())
+```
 
-No raw SQL string concatenation
+* No raw SQL string concatenation
 
-How to Test:
+**How to Test:**
 
-Attempt SQL injection payload in login form.
+* Attempt SQL injection payload in login form
+* Query should not break or return unintended results
 
-Query should not break or return unintended results.
+---
 
-7. HTTP Security Headers (Flask-Talisman)
+## 7️⃣ HTTP Security Headers (Flask-Talisman)
 
-Mitigates:
+**Mitigates:**
 
-XSS
+* Cross-Site Scripting (XSS)
+* Clickjacking
 
-Clickjacking
+**Implementation:**
 
-Implementation:
+* Content Security Policy (CSP)
+* Secure header enforcement
 
-Content Security Policy (CSP)
+**How to Test:**
 
+* Inspect response headers in DevTools
+* Confirm CSP and other headers are present
 
-Secure header enforcement
+---
 
-How to Test:
+## 8️⃣ Secure Session Cookie Configuration
 
-Inspect response headers in browser DevTools.
+**Mitigates:**
 
-Confirm CSP and other security headers are present.
+* XSS session theft
+* CSRF abuse
+* Cookie interception
 
-8. Secure Session Cookie Configuration
+**Implementation:**
 
-Mitigates:
-
-XSS session theft
-
-CSRF
-
-Cookie interception
-
-Implementation:
-
+```python
 SESSION_COOKIE_HTTPONLY = True
-
-SESSION_COOKIE_SECURE = True (in prod)
-
+SESSION_COOKIE_SECURE = True  # In production
 SESSION_COOKIE_SAMESITE = 'Lax'
+```
 
-How to Test:
+**How to Test:**
 
-Inspect session cookie in DevTools → confirm flags are set.
+* Inspect session cookie in DevTools
+* Confirm flags are correctly set
 
-9. Rate Limiting (Flask-Limiter)
+---
 
-Mitigates:
+## 9️⃣ Rate Limiting (Flask-Limiter)
 
-Brute force attacks
+**Mitigates:**
 
-Credential stuffing
+* Brute force attacks
+* Credential stuffing
 
-Implementation:
+**Implementation:**
 
-IP-based rate limiting:
+* IP-based rate limiting:
 
+```python
 @limiter.limit("5 per minute")
+```
 
-Account lockout after 5 failed login attempts
+* Account lockout after 5 failed login attempts
+* 15-minute temporary lockout window
 
-15-minute temporary lockout window
+**How to Test:**
 
-How to Test:
+* Attempt 5 failed logins within one minute → receive HTTP 429
+* Trigger account lockout → blocked for 15 minutes
 
-Attempt 5 failed logins in 1 minute - app returns 429 Too Many Requests error.
+---
 
-Trigger account lockout and you will get blocked for 15 minutes.
+## 🔟 Account Lockout Logic
 
-10. Account Lockout Logic
-
-Mitigates:
-
+**Mitigates:**
 Targeted brute force attacks against specific accounts
 
-Implementation:
+**Implementation:**
 
-failed_logins counter in DB
+* `failed_logins` counter stored in database
+* `lockout_until` timestamp enforced
+* Counters reset on successful login
 
-lockout_until timestamp
+**How to Test:**
 
-Reset on successful login
+* Fail login 5 times which should trigger account lock
+* Wait for lockout window or reset database
 
-How to Test:
+---
 
-Fail login 5 times and your account gets locked.
+# 🔮 Recommendations for Future Hardening
 
-Wait or reset DB to restore access.
+* Session expiration and rotation
+* Enforced HTTPS in production
+* Centralised logging and monitoring
+* Structured security logging for rate limits
+* Multi-Factor Authentication (MFA)
+* CAPTCHA on repeated failures
+* Password checks against known compromised password lists
+* Secure password reset workflow
+* Full HSTS enforcement in production
+* Web Application Firewall (WAF)
 
+---
 
-------------------------------------------------
+# 🤖 AI Tools Used
 
+I used a personal security-focused chatbot I developed for penetration testing support. It leverages OpenAI’s GPT-5.2 model. I used it to:
 
-Hope to speak soon! 
+* Troubleshoot implementation issues
+* Sanity check defensive control choices
+* Refine documentation (README and SUBMISSION)
 
-Cheers
+I developed the code in Visual Studio Code with GitHub Copilot enabled (v0.37.9).
 
-Brig Lewis
+When performance issues occurred, I temporarily used Claude Sonnet 4.6 (free tier) for additional debugging support.
+
+---
+
+# 📚 Security Alignment
+
+This project aligns with:
+
+* OWASP Top 10
+* Authentication & Session Management best practices
+* Defense-in-depth principles
+* Secure SDLC thinking
+
+---
+
+Hope to speak soon.
+
+Cheers,
+**Brig Lewis**
+
+---
