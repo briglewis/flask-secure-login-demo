@@ -84,7 +84,7 @@ flaskLoginApp/
 ## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/briglewis/flask-secure-login-demo.git
 cd YOUR_REPO
 ```
 
@@ -134,7 +134,7 @@ FLASK_ENV=development
 Generate a secure key:
 
 ```bash
-python -c "import secrets; print(secrets.token_hex(32))"
+python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
 
 ⚠️ Do not commit `.env` to version control.
