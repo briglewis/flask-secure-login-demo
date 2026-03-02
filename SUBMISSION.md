@@ -4,7 +4,7 @@
 
 I chose Flask for this project because I have prior experience building small applications with it, and Python allows me to rapidly prototype secure functionality.
 
-My initial step was to identify common web application vulnerabilities — particularly those affecting authentication and login workflows. I then prioritised controls that could be realistically implemented, tested, and validated within the time available.
+My initial step was to identify common web application vulnerabilities,  particularly those affecting authentication and login workflows. I then prioritised controls that could be realistically implemented, tested, and validated within the time available.
 
 This submission focuses on practical, defensive security controls aligned with modern web security best practices and OWASP guidance.
 
@@ -261,7 +261,7 @@ Targeted brute force attacks against specific accounts
 
 # 🤖 AI Tools Used
 
-I used a personal security-focused chatbot I developed for penetration testing support. It leverages OpenAI’s GPT-5.2 model. I used it to:
+I used a personal security-focused chatbot I developed for penetration testing support called Hacky McHack Face. It leverages OpenAI’s GPT-5.2 model. I used it to:
 
 * Troubleshoot implementation issues
 * Sanity check defensive control choices
@@ -269,7 +269,7 @@ I used a personal security-focused chatbot I developed for penetration testing s
 
 I developed the code in Visual Studio Code with GitHub Copilot enabled (v0.37.9).
 
-When performance issues occurred, I temporarily used Claude Sonnet 4.6 (free tier) for additional debugging support.
+When performance issues occurred with Hacky McHack Face, I used Claude Sonnet 4.6 (free tier) for additional debugging support.
 
 ---
 
@@ -280,7 +280,6 @@ This project aligns with:
 * OWASP Top 10
 * Authentication & Session Management best practices
 * Defense-in-depth principles
-* Secure SDLC thinking
 
 ---
 
