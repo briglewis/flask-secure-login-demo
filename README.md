@@ -242,7 +242,7 @@ Please see `SUBMISSION.md` for:
 
 This project mitigates risks aligned with:
 
-* OWASP Top 10 (2021)
+* OWASP Top 10 (2025)
 * Authentication and session management best practices
 * Defense-in-depth principles
 
@@ -251,12 +251,3 @@ This project mitigates risks aligned with:
 # 📬 License
 
 This project is provided for educational and demonstration purposes.
-
----
-
-If you’d like, I can now:
-
-* Add GitHub badges (Python version, security focus, license)
-* Add a threat model diagram section
-* Convert this into a security assessment style README
-* Make it recruiter / hiring-manager optimized 🚀
