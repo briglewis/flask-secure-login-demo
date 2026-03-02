@@ -169,7 +169,6 @@ http://127.0.0.1:5000
 
 ---
 
-````markdown
 ## 7️⃣ Create a Test User
 
 To test authentication and security controls, create a user manually via the Flask shell.
@@ -246,6 +245,47 @@ Inspect response headers for:
 * Content-Security-Policy
 * Strict-Transport-Security (production)
 * X-Frame-Options
+
+---
+
+# ⚠️ Production Notes
+
+For production deployment:
+
+* Use a strong `SECRET_KEY`
+* Use HTTPS
+* Use Redis for Flask-Limiter storage
+* Use PostgreSQL instead of SQLite
+* Disable debug mode
+* Set `FLASK_ENV=production`
+* Enforce HSTS
+
+---
+
+# 📄 Submission
+
+Please see `SUBMISSION.md` for:
+
+* Design decisions
+* Threat model considerations
+* Security implementation details
+* Testing methodology
+
+---
+
+# 📚 Security Alignment
+
+This project mitigates risks aligned with:
+
+* OWASP Top 10 (2025)
+* Authentication and session management best practices
+* Defense-in-depth principles
+
+---
+
+# 📬 License
+
+This project is provided for educational and demonstration purposes.
 
 ---
 
