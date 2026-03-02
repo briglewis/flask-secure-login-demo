@@ -85,7 +85,7 @@ flaskLoginApp/
 
 ```bash
 git clone https://github.com/briglewis/flask-secure-login-demo.git
-cd YOUR_REPO
+cd flask-secure-login-demo
 ```
 
 ---
