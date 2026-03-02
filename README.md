@@ -169,6 +169,34 @@ http://127.0.0.1:5000
 
 ---
 
+## 7️⃣ Create a Test User
+
+To test authentication and security controls, create a user manually via the Flask shell.
+
+Open a Flask Shell
+python3 -m flask --app micrologin shell
+Create a User
+
+Run the following inside the shell:
+
+from app import db
+from app.models import User
+
+u = User(username="jo", email="jo@appsec.com")
+u.set_password("YourStrongPasswordHere!")
+db.session.add(u)
+db.session.commit()
+Log In Using
+
+Email: jo@appsec.com
+
+Password: YourStrongPasswordHere!
+
+🔐 Security Note
+
+Passwords are securely hashed before storage using industry-standard hashing mechanisms. Plaintext passwords are never stored in the database.
+
+
 # 🔎 Testing Security Controls
 
 ### Brute Force Protection
