@@ -8,15 +8,6 @@ from flask_login import login_required, logout_user
 from urllib.parse import urlsplit
 from datetime import datetime, timedelta
 
-@app.get("/_debug/context")
-def debug_context():
-    ctx = {}
-    app.update_template_context(ctx)
-    return {
-        "has_logout_form": "logout_form" in ctx,
-        "keys_sample": sorted(list(ctx.keys()))[:20]
-    }
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
      return redirect(url_for('login'))
@@ -32,10 +23,6 @@ def login():
         user= db.session.scalar(
             sa.select(User).where(User.email == form.email.data.lower()))
         
-        """sanity checks to verify user lookup and password check are working as expected"""
-        print("user:", user)
-        print("password ok:", user and user.check_password(form.password.data))
-
         # --- Account lockout check ---
         if user and user.lockout_until and user.lockout_until > datetime.utcnow():
             flash("Account temporarily locked. Try again later.")
