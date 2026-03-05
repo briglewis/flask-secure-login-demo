@@ -20,9 +20,6 @@ class User(UserMixin, db.Model):
     
     lockout_until: so.Mapped[Optional[datetime]] = so.mapped_column(nullable=True)
 
-    def __repr__(self):
-        """Return a readable representation for debugging."""
-        return '<User {}>'.format(self.username)
     def set_password(self, password):
         """Hash and store the user's password securely."""
         self.password_hash = generate_password_hash(password)
