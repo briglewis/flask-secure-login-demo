@@ -1,5 +1,5 @@
 
-# 🔐 Flask (Kind Of) Secure Login Application
+# 🔐 Flask (Kind Of) Secure (Buggy) Login Application
 
 A security-focused Flask authentication application demonstrating a selection of defensive controls aligned with modern web security best practices and OWASP guidance.
 
